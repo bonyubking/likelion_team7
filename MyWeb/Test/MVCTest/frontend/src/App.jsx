@@ -7,7 +7,7 @@ function App() {
   const [travels, setTravels] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:3001/api/travels")
+    fetch("http://localhost:8080/api/travels")
       .then((res) => res.json())
       .then((data) => setTravels(data))
       .catch((err) => console.error("데이터 로드 실패:", err));

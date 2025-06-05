@@ -1,26 +1,27 @@
-import React from "react";
-import Header from "./components/Header";
+
+import React, { useEffect, useState } from "react";
 import TravelCard from "./components/TravelCard";
-import Footer from "./components/Footer";
-import travelData from "./travelData";
-import './App.css';
+import TravelForm from "./components/TravelForm";
 
+function App() {
+  const [travels, setTravels] = useState([]);
 
-export default function App() {
-  const cards = travelData.map(item => (
-    <TravelCard 
-      key={item.id}
-      {...item} 
-    />
-  ));
-  
+  useEffect(() => {
+    fetch("http://localhost:8080/api/travels")
+      .then((res) => res.json())
+      .then((data) => setTravels(data))
+      .catch((err) => console.error("데이터 로드 실패:", err));
+  }, []);
+
   return (
     <div>
-      <Header />
-      <section className="cards-list">
-        {cards}
-      </section>
-      <Footer />
+      <TravelForm onAdd={() => window.location.reload()} />
+<h1 style={{ textAlign: "center", margin: "20px 0" }}>🌍 여행지 목록</h1>
+      {travels.map((travel) => (
+        <TravelCard key={travel.id} {...travel} />
+      ))}
     </div>
   );
 }
+
+export default App;

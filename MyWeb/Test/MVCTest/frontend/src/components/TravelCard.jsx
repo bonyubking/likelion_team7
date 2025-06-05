@@ -4,7 +4,7 @@ export default function TravelCard(props) {
   const [isOpen, setIsOpen] = useState(false);
 
   const onDelete = (id) => {
-    fetch(`http://localhost:3001/api/travels/${id}`, {
+    fetch(`http://localhost:8080/api/travels/${id}`, {
       method: "DELETE",
     })
       .then((res) => res.json())

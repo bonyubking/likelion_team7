@@ -6,12 +6,14 @@ import java.security.NoSuchAlgorithmException;
 import java.security.interfaces.RSAPublicKey;
 import java.util.UUID;
 
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
@@ -22,6 +24,7 @@ import org.springframework.security.oauth2.server.authorization.config.annotatio
 import org.springframework.security.oauth2.server.authorization.settings.AuthorizationServerSettings;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
+import org.springframework.security.oauth2.server.authorization.config.annotation.web.configurers.OAuth2AuthorizationServerConfigurer;
 
 
 @Configuration
@@ -29,25 +32,27 @@ import org.springframework.security.web.authentication.LoginUrlAuthenticationEnt
 public class AuthorizationServerConfig {
 
     // 1. 보안 필터 체인 - DI로 jwtDecoder를 주입
-    @Bean
+	@Bean
     @Order(Ordered.HIGHEST_PRECEDENCE)
-    public SecurityFilterChain authorizationServerSecurityFilterChain(HttpSecurity http, JwtDecoder jwtDecoder) throws Exception {
-        
-    	OAuth2AuthorizationServerConfiguration.applyDefaultSecurity(http);
-    	
-    	http.securityMatcher("/oauth2/**") 
+    public SecurityFilterChain authorizationServerSecurityFilterChain(HttpSecurity http, JwtDecoder jwtDecoder)
+            throws Exception {
+         http.with(new OAuth2AuthorizationServerConfigurer(), (authorizationServerConfigurer) -> {
 
-            .exceptionHandling(exception ->
-                exception.authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login")) 
-            )
-            .oauth2ResourceServer(oauth2ResourceServer ->
-                oauth2ResourceServer.jwt(jwt ->
-                    jwt.decoder(jwtDecoder) 
-                )
-            );
-
-        return http.build();
+            })
+         .securityMatcher("/oauth2/**")
+         .authorizeHttpRequests(
+                 auth -> auth
+                         .requestMatchers("/oauth2/token").permitAll() 
+                         .anyRequest().authenticated() 
+         )
+         .exceptionHandling(
+                 exception -> exception.authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login")))
+         .oauth2ResourceServer(oauth2ResourceServer -> oauth2ResourceServer.jwt(jwt -> jwt.decoder(jwtDecoder)));
+         http.csrf(AbstractHttpConfigurer::disable);
+         	return http.build();
     }
+	
+	
 
     // 2. RSA KeyPair를 생성하는 Bean -> 공개 키값 생성해서 리턴
     @Bean

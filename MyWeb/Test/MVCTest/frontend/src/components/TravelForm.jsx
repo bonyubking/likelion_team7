@@ -12,7 +12,7 @@ export default function TravelForm({ onAdd }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const res = await fetch("http://localhost:3001/api/travels", {
+    const res = await fetch("http://localhost:8080/api/travels", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(form),
@@ -34,7 +34,7 @@ export default function TravelForm({ onAdd }) {
           <label>
             {field}:{" "}
             <input
-              type="text"
+              type={field.includes("Date") ? "date" : "text"}
               name={field}
               value={form[field]}
               onChange={handleChange}
