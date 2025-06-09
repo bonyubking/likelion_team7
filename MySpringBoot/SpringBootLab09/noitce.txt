@@ -1,0 +1,45 @@
+
+TaskScheduler   -> https://docs.spring.io/spring-framework/reference/integration/scheduling.html#scheduling-task-scheduler
+
+TaskScheduler : 스프링 스케쥴러
+
+ThreadPoolTaskScheduler를 기본으로 사용한다
+
+@Scheduled
+
+==========================
+@EnableScheduling -> 환경 설정
+@Scheduled -> 백그라운드 실행하는 메소드
+
+
+실습 sec05
+
+[1] 단일 백그라운드 실행
+[2] 스레드 풀 커스텀 TaskScheduler   -> https://docs.spring.io/spring-framework/reference/integration/scheduling.html#scheduling-task-scheduler
+
+
+=-=============================
+
+
+단순 비동기 실행-> TaskExecutor, @Async 
+예약/반복 작업      -> TaskScheduler, @Scheduled, schedule()
+복잡한 병렬 제어  ->ExecutorService스레드 풀 관리, 
+			CompletableFuture비동기 작업 연결, 
+			Project Reactor_논블로킹 리액티브 스트림 등 사용 가능
+			
+			
+=========================
+
+COM.sec06:
+
+1)0 0 9  * * * : 매일  오전 9시에
+
+2)매주 월요일 오전  8시에 주간보고서 전송
+ 0 0 8  *  *  MON
+
+3) 월간 보고  매달 1일 자정 
+0 0 0 1 * * 
+
+4) 평일 오전 9시 ~ 오후 6시 까지 
+매 10분마다 쉬고 싶다.
+0  */10    9-18   *  *  MON-FRI
