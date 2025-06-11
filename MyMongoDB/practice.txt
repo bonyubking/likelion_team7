@@ -1,0 +1,2 @@
+mongoimport --db myemp --collection testemp --type=csv --headerline --file=emp.csv
+
