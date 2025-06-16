@@ -1,7 +1,0 @@
-package com.typing.service.Comment;
-
-public interface CommentService {
-	
-	
-
-}

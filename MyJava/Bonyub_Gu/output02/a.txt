@@ -1,3 +1,0 @@
-Hello, this is compressed content.
-Java GZIP is easy to use!
-Virtual Thread도 문제 없이 동작합니다

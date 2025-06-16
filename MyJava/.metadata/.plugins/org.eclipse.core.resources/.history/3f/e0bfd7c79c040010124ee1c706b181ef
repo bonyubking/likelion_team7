@@ -1,5 +1,0 @@
-package com.workshop11.num01;
-
-public class Truck extends Car {
-
-}
